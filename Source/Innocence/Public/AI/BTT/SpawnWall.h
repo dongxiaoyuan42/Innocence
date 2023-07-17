@@ -4,23 +4,21 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTTaskNode.h"
-#include "BTT_ShotProj.generated.h"
+#include "SpawnWall.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class INNOCENCE_API UBTT_ShotProj : public UBTTaskNode
+class INNOCENCE_API USpawnWall : public UBTTaskNode
 {
 	GENERATED_BODY()
 
-protected:
+private:
 
 	// 在这个行为树节点中传入一个子弹类
 	UPROPERTY(EditAnywhere, Category = "AI")
-		TSubclassOf<AActor> ProjectileClass;
-
-private:
+		TSubclassOf<AActor> WallClass;
 
 	UPROPERTY(EditAnywhere, Category = "Attack")
 		float MaxBulleSpread;
@@ -30,5 +28,5 @@ private:
 
 public:
 
-	UBTT_ShotProj();
+	USpawnWall();
 };

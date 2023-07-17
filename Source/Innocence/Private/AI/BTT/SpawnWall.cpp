@@ -1,7 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
-#include "AI/BTT/BTT_ShotProj.h"
+#include "AI/BTT/SpawnWall.h"
 #include "AIController.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/Actor.h"
@@ -9,13 +8,12 @@
 #include "Engine/World.h"
 #include "Component/SAttributeComponent.h"
 
-UBTT_ShotProj::UBTT_ShotProj()
+USpawnWall::USpawnWall()
 {
 	MaxBulleSpread = 8.0f;
 }
 
-// 执行攻击
-EBTNodeResult::Type UBTT_ShotProj::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
+EBTNodeResult::Type USpawnWall::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	// 获取AIController
 	AAIController* MyController = OwnerComp.GetAIOwner();
@@ -28,14 +26,17 @@ EBTNodeResult::Type UBTT_ShotProj::ExecuteTask(UBehaviorTreeComponent& OwnerComp
 		{
 			return EBTNodeResult::Failed;
 		}
-		// 获取AI左手骨骼插槽
-		FVector MuzzleLocation = AICharacter->GetMesh()->GetSocketLocation("Muzzle_01");
+		// 获取墙结束的位置
+		FVector WallEndLocation = AICharacter->GetMesh()->GetSocketLocation("EndOfWall");
 		// 获取攻击对象
 		AActor* TargetActor = Cast<AActor>(OwnerComp.GetBlackboardComponent()->GetValueAsObject("TargetActor"));
 		if (TargetActor == nullptr)
 		{
 			return EBTNodeResult::Failed;
 		}
+		ACharacter* PlayerCharacter = Cast<ACharacter>(TargetActor);
+
+		FVector PlayerLocation = TargetActor->GetActorLocation();
 
 		// 攻击对象应该活着
 		//if (!USAttributeComponent::IsAlive(TargetActor))
@@ -43,27 +44,29 @@ EBTNodeResult::Type UBTT_ShotProj::ExecuteTask(UBehaviorTreeComponent& OwnerComp
 		//	return EBTNodeResult::Failed;
 		//}
 
-		// 设置子弹攻击朝向，指向目标现在所处位置
-		FVector Direction = TargetActor->GetActorLocation() - MuzzleLocation;
-		FRotator MuzzleRotator = Direction.Rotation();
+		// 设置墙攻击朝向，指向目标现在所处位置
+		FVector Direction = WallEndLocation - PlayerLocation;
+		FRotator WallRotator = Direction.Rotation();
+		FVector WallStartLocation = PlayerLocation - WallRotator.Vector() * 1000.f;
 		// 添加一些扰动
-		//MuzzleRotator.Pitch += FMath::RandRange(0.0f, MaxBulleSpread);
-		//MuzzleRotator.Yaw += FMath::RandRange(-MaxBulleSpread, MaxBulleSpread);
+		//WallRotator.Pitch += FMath::RandRange(0.0f, MaxBulleSpread);
+		//WallRotator.Yaw += FMath::RandRange(-MaxBulleSpread, MaxBulleSpread);
 
 		//UE_LOG(LogTemp, Log, TEXT("---------------"));
-		//UE_LOG(LogTemp, Log, TEXT("Location: %s"), *MuzzleLocation.ToString());
-		//UE_LOG(LogTemp, Log, TEXT("Rotator: %s"), *MuzzleRotator.ToString());
+		//UE_LOG(LogTemp, Log, TEXT("Location: %s"), *WallEndLocation.ToString());
+		//UE_LOG(LogTemp, Log, TEXT("Rotator: %s"), *WallRotator.ToString());
 
 		// 设置生成抛射物的碰撞信息与抛射物所有者信息
 		FActorSpawnParameters Params;
 		Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		Params.Instigator = AICharacter;
 
-		// 生成抛射物
-		AActor* NewProj = GetWorld()->SpawnActor<AActor>(ProjectileClass, MuzzleLocation, MuzzleRotator, Params);
+		// 生成墙
+		AActor* NewWall = GetWorld()->SpawnActor<AActor>(WallClass, WallStartLocation, WallRotator, Params);
 		// 返回生成结果
-		return NewProj ? EBTNodeResult::Succeeded : EBTNodeResult::Failed;
+		return NewWall ? EBTNodeResult::Succeeded : EBTNodeResult::Failed;
 	}
 
 	return EBTNodeResult::Failed;;
 }
+
