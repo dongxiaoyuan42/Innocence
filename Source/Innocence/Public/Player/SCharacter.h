@@ -66,9 +66,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* PrimaryAttackAction; // ×ó¼üÆÕÍ¨¹¥»÷
 
-	UPROPERTY(EditAnywhere, Category = "Attack")
-	TSubclassOf<AActor> PrimaryProjectile;//ÆÕÍ¨¹¥»÷×Óµ¯
-
 	// ÒÆ¶¯
 	void Move(const FInputActionValue& Value);
 
