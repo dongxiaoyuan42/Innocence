@@ -11,6 +11,8 @@
 #include "Math/Vector2D.h"
 #include "Component/SAttributeComponent.h"
 #include "Component/SWeaponComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "Item/Projectile/SProjectileBase.h"
 
 // Sets default values
 ASCharacter::ASCharacter()
@@ -29,6 +31,8 @@ ASCharacter::ASCharacter()
 	AttributeComp = CreateDefaultSubobject<USAttributeComponent>("AttributeComp");
 	//// 添加武器组件
 	//WeaponComp = CreateDefaultSubobject<USWeaponComponent>("WeaponComp");
+
+	GetCharacterMovement()->bOrientRotationToMovement = true;
 
 }
 
@@ -78,10 +82,20 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		// 角色视角
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASCharacter::Look);
 		// 普通攻击
-		EnhancedInputComponent->BindAction(PrimaryAttackAction, ETriggerEvent::Triggered, this, &ASCharacter::PrimaryAttack);
+		//EnhancedInputComponent->BindAction(PrimaryAttackAction, ETriggerEvent::Triggered, this, &ASCharacter::PrimaryAttack);
 
 	}
+	
+	/*********以下部分代码是检测子弹所写***************/
+	PlayerInputComponent->BindAction("PrimaryAttack", IE_Pressed, this, &ASCharacter::PrimaryAttack);
 
+
+
+
+
+	/*****************↑*************/
+	
+	
 }
 
 // 角色移动函数
@@ -125,6 +139,8 @@ void ASCharacter::Look(const FInputActionValue& Value)
 // 普通攻击
 void ASCharacter::PrimaryAttack()
 {
+	//PlayAnimMontage(AttackAnim);
+	SpawnProjectile(PrimaryProjectile);
 	//ActionComp->StartActionByName(this, "BaseAttack");
 }
 
@@ -138,5 +154,48 @@ void ASCharacter::GetHealthChange(AActor* InstigatordActor, USAttributeComponent
 		DisableInput(PC);
 
 		SetLifeSpan(5.0f);
+	}
+}
+
+
+//子弹生成模板
+void ASCharacter::SpawnProjectile(TSubclassOf<AActor> ClassToSpawn)
+{
+	if (ensureAlways(ClassToSpawn))
+	{
+
+		FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01") + (0.0f,0.0f,50.0f);
+		
+
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		SpawnParams.Instigator = this;
+
+		FCollisionShape Shape;
+		Shape.SetSphere(20.0f);
+
+		FCollisionQueryParams Params;
+		Params.AddIgnoredActor(this);
+
+		FCollisionObjectQueryParams ObjParams;
+		ObjParams.AddObjectTypesToQuery(ECC_WorldDynamic);
+		ObjParams.AddObjectTypesToQuery(ECC_WorldStatic);
+		ObjParams.AddObjectTypesToQuery(ECC_Pawn);
+
+		FVector TraceStart = CameraComp->GetComponentLocation();
+
+		FVector TraceEnd = TraceStart + CameraComp->GetComponentRotation().Vector() * 5000;
+
+		FHitResult Hit;
+		if (GetWorld()->SweepSingleByObjectType(Hit, TraceStart, TraceEnd, FQuat::Identity, ObjParams, Shape, Params))
+		{
+			TraceEnd = Hit.ImpactPoint;
+		}
+
+		FRotator ProjRotation = FRotationMatrix::MakeFromX(TraceEnd - HandLocation).Rotator();
+
+		FTransform SpawnTM = FTransform(ProjRotation, HandLocation);
+		ASProjectileBase* Projectile = Cast<ASProjectileBase>(GetWorld()->SpawnActor<AActor>(ClassToSpawn, SpawnTM, SpawnParams));
+		//Projectile->EnhancedProjectile(RightMouseHoldTime);
 	}
 }
