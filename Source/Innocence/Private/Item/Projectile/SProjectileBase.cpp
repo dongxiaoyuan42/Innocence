@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ItemProjectile/SProjectileBase.h"
+#include "Item/Projectile/SProjectileBase.h"
 
 // Sets default values
 ASProjectileBase::ASProjectileBase()
