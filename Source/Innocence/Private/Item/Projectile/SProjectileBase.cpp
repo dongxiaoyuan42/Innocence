@@ -8,6 +8,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Component/SAttributeComponent.h"
 
+
 // Sets default values
 ASProjectileBase::ASProjectileBase()
 {
@@ -90,7 +91,7 @@ void ASProjectileBase::OnActorOverlap(UPrimitiveComponent* OverlappedComponent, 
 	}
 }
 
-void ASProjectileBase :: Explode_Implementation()
+void ASProjectileBase::Explode_Implementation()
 {
 	if (ensure(!IsPendingKill())) {
 		UGameplayStatics::SpawnEmitterAtLocation(this, ImpactVFX, GetActorLocation(), GetActorRotation());
