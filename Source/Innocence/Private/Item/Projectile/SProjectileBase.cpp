@@ -91,6 +91,7 @@ void ASProjectileBase::OnActorOverlap(UPrimitiveComponent* OverlappedComponent, 
 	}
 }
 
+
 void ASProjectileBase::Explode_Implementation()
 {
 	if (ensure(!IsPendingKill())) {
@@ -99,4 +100,20 @@ void ASProjectileBase::Explode_Implementation()
 	}
 }
 
+//充能子弹，能根据不同蓄力时间打出不同伤害的子弹
+void ASProjectileBase::EnhancedProjectile(float ChargeTime)
+{
+	if (ChargeTime >= 0 && ChargeTime < 1)
+	{
+		ProjectileDamage = ProjectileDamage * 1.0;
+	}
+	else if (ChargeTime >= 1 && ChargeTime < 2)
+	{
+		ProjectileDamage = ProjectileDamage * 1.5;
+	}
+	else
+	{
+		ProjectileDamage = ProjectileDamage * 2.0;
+	}
+}
 
