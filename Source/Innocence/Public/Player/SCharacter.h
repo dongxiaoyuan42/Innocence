@@ -5,12 +5,15 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h" 
+#include "AbilitySystemComponent.h"
+#include "AbilitySystemInterface.h"
 #include "SCharacter.generated.h"
 
 class USpringArmComponent; // 弹簧臂组件
 class UCameraComponent; // 摄像机组件
 class USAttributeComponent; // 属性组件
 //class USWeaponComponent; // 武器组件
+class USActionComponent; // 能力组件
 
 // 输入相关
 class UInputMappingContext;
@@ -18,7 +21,7 @@ class UInputAction;
 class UInputComponent;
 
 UCLASS()
-class INNOCENCE_API ASCharacter : public ACharacter
+class INNOCENCE_API ASCharacter : public ACharacter, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
@@ -39,6 +42,12 @@ protected:
 
 	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
 	//USWeaponComponent* WeaponComp; // 武器组件
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
+	USActionComponent* AbilityComp; // ASC
+
+	// 获取ASC
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const;
 
 protected:
 
@@ -71,6 +80,7 @@ protected:
 	// 死亡判断
 	UFUNCTION()
 	void GetHealthChange(AActor* InstigatordActor, USAttributeComponent* OwningComp, float NewHealth, float Delta);
+	void SpawnProjectile(TSubclassOf<AActor> ClassToSpawn);
 
 protected:
 	// Called when the game starts or when spawned
