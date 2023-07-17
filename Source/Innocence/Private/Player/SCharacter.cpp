@@ -4,6 +4,7 @@
 #include "Player/SCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Components/InputComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -11,6 +12,9 @@
 #include "Math/Vector2D.h"
 #include "Component/SAttributeComponent.h"
 #include "Component/SWeaponComponent.h"
+#include "Component/SActionComponent.h"
+
+
 
 // Sets default values
 ASCharacter::ASCharacter()
@@ -29,7 +33,10 @@ ASCharacter::ASCharacter()
 	AttributeComp = CreateDefaultSubobject<USAttributeComponent>("AttributeComp");
 	//// 添加武器组件
 	//WeaponComp = CreateDefaultSubobject<USWeaponComponent>("WeaponComp");
+	// 添加ASC
+	AbilityComp = CreateDefaultSubobject<USActionComponent>(TEXT("AbilitySystem"));
 
+	GetCharacterMovement()->bOrientRotationToMovement = true;//向运动方向修改角色的朝向
 }
 
 void ASCharacter::PostInitializeComponents()
@@ -81,7 +88,7 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		EnhancedInputComponent->BindAction(PrimaryAttackAction, ETriggerEvent::Triggered, this, &ASCharacter::PrimaryAttack);
 
 	}
-
+	
 }
 
 // 角色移动函数
@@ -125,7 +132,7 @@ void ASCharacter::Look(const FInputActionValue& Value)
 // 普通攻击
 void ASCharacter::PrimaryAttack()
 {
-	//ActionComp->StartActionByName(this, "BaseAttack");
+	AbilityComp->StartActionByName(this, "BaseAttack");
 }
 
 // 死亡判断
@@ -139,4 +146,9 @@ void ASCharacter::GetHealthChange(AActor* InstigatordActor, USAttributeComponent
 
 		SetLifeSpan(5.0f);
 	}
+}
+
+UAbilitySystemComponent* ASCharacter::GetAbilitySystemComponent() const
+{
+	return AbilityComp;
 }
