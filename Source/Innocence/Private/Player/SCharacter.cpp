@@ -4,6 +4,7 @@
 #include "Player/SCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Components/InputComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -35,6 +36,7 @@ ASCharacter::ASCharacter()
 	// 添加ASC
 	AbilityComp = CreateDefaultSubobject<USActionComponent>(TEXT("AbilitySystem"));
 
+	GetCharacterMovement()->bOrientRotationToMovement = true;//向运动方向修改角色的朝向
 }
 
 void ASCharacter::PostInitializeComponents()
@@ -83,7 +85,7 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		// 角色视角
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASCharacter::Look);
 		// 普通攻击
-		//EnhancedInputComponent->BindAction(PrimaryAttackAction, ETriggerEvent::Triggered, this, &ASCharacter::PrimaryAttack);
+		EnhancedInputComponent->BindAction(PrimaryAttackAction, ETriggerEvent::Triggered, this, &ASCharacter::PrimaryAttack);
 
 	}
 	
@@ -130,7 +132,7 @@ void ASCharacter::Look(const FInputActionValue& Value)
 // 普通攻击
 void ASCharacter::PrimaryAttack()
 {
-	//ActionComp->StartActionByName(this, "BaseAttack");
+	AbilityComp->StartActionByName(this, "BaseAttack");
 }
 
 // 死亡判断
