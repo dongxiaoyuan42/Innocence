@@ -6,6 +6,10 @@
 #include "GameFramework/Character.h"
 #include "SAICharacter.generated.h"
 
+class USAttributeComponent; // 属性组件
+class UUserWidget; // UI
+class USWorldUserWidget; // AI血条UI
+
 UCLASS()
 class INNOCENCE_API ASAICharacter : public ACharacter
 {
@@ -16,14 +20,20 @@ public:
 	ASAICharacter();
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	USWorldUserWidget* ActiveHealthBar;
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+		TSubclassOf<UUserWidget> HealthBarWidgetClass; // 敌人血条UI
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
+		USAttributeComponent* AttributeComp; // 属性组件
+
+	// 注册事件回调函数
+	virtual void PostInitializeComponents() override;
+
+	// 生命值改变时
+	UFUNCTION()
+		void GetHealthChange(AActor* InstigatordActor, USAttributeComponent* OwningComp, float NewHealth, float Delta);
 
 };
