@@ -57,6 +57,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* PrimaryAttackAction; // ×ó¼üÆÕÍ¨¹¥»÷
 
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	TSubclassOf<AActor> PrimaryProjectile;//ÆÕÍ¨¹¥»÷×Óµ¯
+
 	// ÒÆ¶¯
 	void Move(const FInputActionValue& Value);
 
@@ -71,7 +74,7 @@ protected:
 	// ËÀÍöÅÐ¶Ï
 	UFUNCTION()
 	void GetHealthChange(AActor* InstigatordActor, USAttributeComponent* OwningComp, float NewHealth, float Delta);
-
+	void SpawnProjectile(TSubclassOf<AActor> ClassToSpawn);
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
