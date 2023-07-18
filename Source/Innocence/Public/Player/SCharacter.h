@@ -77,6 +77,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* PrimaryReloadAction;
 
+	// 子弹种类左右切换
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* BulletTypeRightAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* BulletTypeLeftAction;
+
 	// 移动
 	void Move(const FInputActionValue& Value);
 
@@ -96,6 +102,11 @@ protected:
 
 	// 换弹
 	void PrimaryReload();
+
+	// 子弹向右切换
+	void BulletTypeRight();
+	// 子弹向左切换
+	void BulletTypeLeft();
 
 protected:
 

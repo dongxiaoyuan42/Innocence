@@ -94,6 +94,10 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		EnhancedInputComponent->BindAction(AccumulateRelease, ETriggerEvent::Triggered, this, &ASCharacter::AccumulateEnd);
 		// 换弹
 		EnhancedInputComponent->BindAction(PrimaryReloadAction, ETriggerEvent::Triggered, this, &ASCharacter::PrimaryReload);
+		// 子弹向右切换
+		EnhancedInputComponent->BindAction(BulletTypeRightAction, ETriggerEvent::Triggered, this, &ASCharacter::BulletTypeRight);
+		// 子弹向左切换
+		EnhancedInputComponent->BindAction(BulletTypeLeftAction, ETriggerEvent::Triggered, this, &ASCharacter::BulletTypeLeft);
 
 	}
 	
@@ -167,6 +171,19 @@ void ASCharacter::PrimaryReload()
 {
 	UE_LOG(LogTemp, Log, TEXT("Reload Start"));
 	AbilityComp->StartActionByName(this, "Reload");
+}
+
+// 子弹向右切换
+void ASCharacter::BulletTypeRight()
+{
+	UE_LOG(LogTemp, Log, TEXT("BulletTypeRight"));
+	AbilityComp->StartActionByName(this, "BulletTypeRight");
+}
+// 子弹向左切换
+void ASCharacter::BulletTypeLeft()
+{
+	UE_LOG(LogTemp, Log, TEXT("BulletTypeLeft"));
+	AbilityComp->StartActionByName(this, "BulletTypeLeft");
 }
 
 // 死亡判断
