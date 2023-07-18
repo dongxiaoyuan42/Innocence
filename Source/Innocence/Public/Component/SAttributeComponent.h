@@ -40,7 +40,7 @@ protected:
 
 public:
 
-	void BeginPlay();
+	virtual void BeginPlay() override;
 
 	FTimerHandle MemberTimerHandle;
 
