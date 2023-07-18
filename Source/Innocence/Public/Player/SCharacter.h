@@ -67,6 +67,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* PrimaryDashAction; // 冲刺
 
+	// 蓄力
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* AccumulateDown;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* AccumulateRelease;
+
 	// 移动
 	void Move(const FInputActionValue& Value);
 
@@ -78,6 +84,11 @@ protected:
 
 	// 冲刺
 	void PrimaryDash();
+
+	// 蓄力开始
+	void AccumulateStart();
+	// 蓄力结束
+	void AccumulateEnd();
 
 protected:
 

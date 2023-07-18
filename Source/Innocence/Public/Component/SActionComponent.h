@@ -22,23 +22,27 @@ public:
 
 	// 启动的标签
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tags")
-		FGameplayTagContainer ActiveGameplayTags;
+	FGameplayTagContainer ActiveGameplayTags;
+
+	// 查看FGameplayTagContainer是否有特定的gameplaytag
+	UFUNCTION(BlueprintPure, Category = "Tags")
+	bool ActionCompHasTag(const FGameplayTag& TagToCheck);
 
 	// 添加行动
 	UFUNCTION(BlueprintCallable, Category = "Action")
-		void AddAction(AActor* InstigatorActor, TSubclassOf<USAction> ActionClass);
+	void AddAction(AActor* InstigatorActor, TSubclassOf<USAction> ActionClass);
 
 	// 移除行动
 	UFUNCTION(BlueprintCallable, Category = "Action")
-		void RemoveAction(USAction* ActionToRemove);
+	void RemoveAction(USAction* ActionToRemove);
 
 	// 启动行动
 	UFUNCTION(BlueprintCallable, Category = "Action")
-		bool StartActionByName(AActor* InstigatorActor, FName ActionName);
+	bool StartActionByName(AActor* InstigatorActor, FName ActionName);
 
 	// 结束行动
 	UFUNCTION(BlueprintCallable, Category = "Action")
-		bool StopActionByName(AActor* InstigatorActor, FName ActionName);
+	bool StopActionByName(AActor* InstigatorActor, FName ActionName);
 
 	// Sets default values for this component's properties
 	USActionComponent();
@@ -46,16 +50,16 @@ public:
 protected:
 
 	UFUNCTION(Server, Reliable)
-		void ServerStartAction(AActor* InstigatorActor, FName ActionName);
+	void ServerStartAction(AActor* InstigatorActor, FName ActionName);
 
 	UFUNCTION(Server, Reliable)
-		void ServerStopAction(AActor* InstigatorActor, FName ActionName);
+	void ServerStopAction(AActor* InstigatorActor, FName ActionName);
 
 	UPROPERTY(EditAnywhere, Category = "Action")
-		TArray<TSubclassOf<USAction>> DefaultActions;
+	TArray<TSubclassOf<USAction>> DefaultActions;
 
 	UPROPERTY(Replicated)
-		TArray<USAction*> Actions; // 所有行动
+	TArray<USAction*> Actions; // 所有行动
 
 	// Called when the game starts
 	virtual void BeginPlay() override;
