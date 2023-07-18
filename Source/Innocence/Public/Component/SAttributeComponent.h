@@ -9,12 +9,12 @@
 // 属性改变事件
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnAttributeChanged, AActor*, InstigatordActor, USAttributeComponent*, OwningComp, float, NewValue, float, Delta);
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class INNOCENCE_API USAttributeComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	// Sets default values for this component's properties
 	USAttributeComponent();
 
@@ -29,31 +29,59 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
 	float HealthMax; // 最大生命值
 
-public:	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
+	float Energy; // 精力值
 
-	// 是否活着
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
+	float EnergyMax; // 最大精力值
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
+	float EnergyRecoverySpeed; // 精力回复速度
+
+public:
+
+	void BeginPlay();
+
+	FTimerHandle MemberTimerHandle;
+
+	/*生命值*/
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
-		bool IsAlive() const;
+	bool IsAlive() const; // 是否活着
 
-	// 是否满血
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
-		bool IsFullHealth() const;
+	bool IsFullHealth() const; // 是否满血
 
-	// 生命值改变
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
-		bool ApplyHealthChange(AActor* InstigatordActor, float Delta);
+	float GetHealth(); // 生命值获取
 
-	// 生命值获取
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
-		float GetHealth();
+	float GetHealthMax(); // 最大生命值获取
 
-	// 最大生命值获取
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
-		float GetHealthMax();
+	bool ApplyHealthChange(AActor* InstigatordActor, float Delta); // 生命值改变
 
-	// 生命值改变事件
 	UPROPERTY(BlueprintAssignable)
-		FOnAttributeChanged OnHealthChanged;
+	FOnAttributeChanged OnHealthChanged; // 生命值改变事件
 
-		
+	/*精力值*/
+	UFUNCTION(BlueprintCallable, Category = "Attributes")
+	bool IsEmptyEnergy() const; // 精力是否为空
+
+	UFUNCTION(BlueprintCallable, Category = "Attributes")
+	bool IsFullEnergy() const; // 精力是否已满
+
+	UFUNCTION(BlueprintCallable, Category = "Attributes")
+	float GetEnergy(); // 精力值获取
+
+	UFUNCTION(BlueprintCallable, Category = "Attributes")
+	float GetEnergyMax(); // 最大精力值获取
+
+	UFUNCTION(BlueprintCallable, Category = "Attributes")
+	bool ApplyEnergyChange(float Delta); // 精力值改变
+
+	UFUNCTION(BlueprintCallable, Category = "Attributes")
+	void EnergyRecovery(); // 精力值自动回复
+
+	UPROPERTY(BlueprintAssignable)
+	FOnAttributeChanged OnEnergyChanged; // 精力值改变事件
 };
