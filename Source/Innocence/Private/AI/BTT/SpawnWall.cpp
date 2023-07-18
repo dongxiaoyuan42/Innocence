@@ -47,7 +47,7 @@ EBTNodeResult::Type USpawnWall::ExecuteTask(UBehaviorTreeComponent& OwnerComp, u
 		// 设置墙攻击朝向，指向目标现在所处位置
 		FVector Direction = WallEndLocation - PlayerLocation;
 		FRotator WallRotator = Direction.Rotation();
-		FVector WallStartLocation = PlayerLocation - WallRotator.Vector() * 1000.f;
+		FVector WallStartLocation = PlayerLocation - WallRotator.Vector() * 10.f;
 		// 添加一些扰动
 		//WallRotator.Pitch += FMath::RandRange(0.0f, MaxBulleSpread);
 		//WallRotator.Yaw += FMath::RandRange(-MaxBulleSpread, MaxBulleSpread);
