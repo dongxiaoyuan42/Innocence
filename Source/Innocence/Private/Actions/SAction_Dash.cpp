@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "SAction_Dash.h"
+#include "Actions/SAction_Dash.h"
 #include "Kismet/KismetMathLibrary.h"
 
 
@@ -38,36 +38,34 @@ void USAction_Dash::TimelineProgressFunction(float Value)
     if (!DashActor->SetActorLocation(NowPos, true))
     {
         CurveTimeline.Stop();
-        //StopAction(DashActor);
+        StopAction(DashActor);
     }
 }
 
 // TimeLine播放结束
 void USAction_Dash::TimelineCallbackFunction()
 {
-    //StopAction(DashActor);
+    StopAction(DashActor);
 }
 
 // 开始Action
-void USAction_Dash::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
+void USAction_Dash::StartAction_Implementation(AActor* InstigatorActor)
 {
-    Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-
-    //ACharacter* InstigatorCharacter = Cast<ACharacter>(ActorInfo->OwnerActor);
-    //if (!InstigatorCharacter)
-    //{
-    //    return;
-    //}
-
+    Super::StartAction_Implementation(InstigatorActor);
+    // 初始化
+    if (!DashActor)
+    {
+        DashActor = InstigatorActor;
+    }
     if (!HasInit)
     {
         SetupTimeline();
     }
 
     // 计算起点终点
-    StartPos = ActorInfo->OwnerActor->GetActorLocation();
+    StartPos = InstigatorActor->GetActorLocation();
 
-    FVector Fwd = ActorInfo->OwnerActor->GetActorForwardVector();
+    FVector Fwd = InstigatorActor->GetActorForwardVector();
     EndPos = StartPos + Fwd * DashLength;
 
     // 播放TiemLine

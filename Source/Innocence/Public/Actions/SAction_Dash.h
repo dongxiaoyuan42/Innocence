@@ -3,17 +3,19 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Abilities/GameplayAbility.h"
+#include "Actions/SAction.h"
 #include "Tickable.h"
 #include "TimerManager.h"
 #include "Components/TimelineComponent.h"
 #include "SAction_Dash.generated.h"
 
+class UTimelineComponent;
+
 /**
  * 
  */
 UCLASS()
-class INNOCENCE_API USAction_Dash : public UGameplayAbility, public FTickableGameObject
+class INNOCENCE_API USAction_Dash : public USAction, public FTickableGameObject
 {
 	GENERATED_BODY()
 
@@ -21,7 +23,7 @@ public:
 
 	USAction_Dash();
 
-	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData);
+	virtual void StartAction_Implementation(AActor* InstigatorActor) override;
 
 public:
 	// 抽象类FTickableGameObject必须重载的函数
