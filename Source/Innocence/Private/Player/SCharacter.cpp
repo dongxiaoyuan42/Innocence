@@ -31,8 +31,8 @@ ASCharacter::ASCharacter()
 	CameraComp->SetupAttachment(SpringArmComp);
 	// 添加属性组件
 	AttributeComp = CreateDefaultSubobject<USAttributeComponent>("AttributeComp");
-	//// 添加武器组件
-	//WeaponComp = CreateDefaultSubobject<USWeaponComponent>("WeaponComp");
+	// 添加武器组件
+	WeaponComp = CreateDefaultSubobject<USWeaponComponent>("WeaponComp");
 	// 添加ASC
 	AbilityComp = CreateDefaultSubobject<USActionComponent>(TEXT("AbilitySystem"));
 
