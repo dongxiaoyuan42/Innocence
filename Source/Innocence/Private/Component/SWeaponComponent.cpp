@@ -124,12 +124,14 @@ bool USWeaponComponent::CanFire()
 void USWeaponComponent::BulletTypeRight()
 {
 	NowBulletType = (NowBulletType + 1) % BulletType.Num();
+	OnBulletChangedRight.Broadcast(NowBulletType);
 }
 
 // Ïò×óÐý×ª
 void USWeaponComponent::BulletTypeLeft()
 {
 	NowBulletType = (NowBulletType + BulletType.Num() - 1) % BulletType.Num();
+	OnBulletChangedLeft.Broadcast(NowBulletType);
 }
 
 TSubclassOf<AActor> USWeaponComponent::GetDefaultBullet()
