@@ -53,9 +53,10 @@ void ASCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	// ÃÌº” ‰»Î”≥…‰
-	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
+	APlayerController* MyPlayerController = Cast<APlayerController>(Controller);
+	if (MyPlayerController)
 	{
-		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(MyPlayerController->GetLocalPlayer()))
 		{
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
