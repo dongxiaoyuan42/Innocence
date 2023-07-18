@@ -32,6 +32,7 @@ void ASHealingProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponen
 		{
 			HealingSphere->SetRadius(FieldRadius);
 		}
+		Destroy();
 
 	}
 }
@@ -52,7 +53,7 @@ void ASHealingProjectile::OnActorHit(UPrimitiveComponent* HitComponent, AActor* 
 		{
 			HealingSphere->SetRadius(FieldRadius);
 		}
-
+		Destroy();
 	}
 
 }
