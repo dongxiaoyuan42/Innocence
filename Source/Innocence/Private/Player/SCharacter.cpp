@@ -92,6 +92,8 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		EnhancedInputComponent->BindAction(AccumulateDown, ETriggerEvent::Started, this, &ASCharacter::AccumulateStart);
 		// ĞîÁ¦½áÊø
 		EnhancedInputComponent->BindAction(AccumulateRelease, ETriggerEvent::Triggered, this, &ASCharacter::AccumulateEnd);
+		// »»µ¯
+		EnhancedInputComponent->BindAction(PrimaryReloadAction, ETriggerEvent::Triggered, this, &ASCharacter::PrimaryReload);
 
 	}
 	
@@ -158,6 +160,13 @@ void ASCharacter::AccumulateEnd()
 {
 	UE_LOG(LogTemp, Log, TEXT("Accumulate End"));
 	AbilityComp->StopActionByName(this, "Accumulate");
+}
+
+// »»µ¯
+void ASCharacter::PrimaryReload()
+{
+	UE_LOG(LogTemp, Log, TEXT("Reload Start"));
+	AbilityComp->StartActionByName(this, "Reload");
 }
 
 // ËÀÍöÅĞ¶Ï

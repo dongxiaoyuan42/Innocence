@@ -131,3 +131,8 @@ void USWeaponComponent::BulletTypeLeft()
 {
 	NowBulletType = (NowBulletType + BulletType.Num() - 1) % BulletType.Num();
 }
+
+TSubclassOf<AActor> USWeaponComponent::GetDefaultBullet()
+{
+	return DefaultBullet;
+}

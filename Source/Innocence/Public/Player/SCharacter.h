@@ -73,6 +73,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* AccumulateRelease;
 
+	// ªªµØ
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* PrimaryReloadAction;
+
 	// “∆∂Ø
 	void Move(const FInputActionValue& Value);
 
@@ -89,6 +93,9 @@ protected:
 	void AccumulateStart();
 	// –Ó¡¶Ω· ¯
 	void AccumulateEnd();
+
+	// ªªµØ
+	void PrimaryReload();
 
 protected:
 

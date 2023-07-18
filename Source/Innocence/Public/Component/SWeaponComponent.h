@@ -39,6 +39,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	void BulletTypeLeft(); // Ïò×óÐý×ª
 
+	TSubclassOf<AActor> GetDefaultBullet();
+
 protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
