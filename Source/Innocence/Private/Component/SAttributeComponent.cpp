@@ -28,6 +28,7 @@ USAttributeComponent* USAttributeComponent::GetAttributes(AActor* FromActor)
 
 void USAttributeComponent::BeginPlay()
 {
+	Super::BeginPlay();
 	// Ìí¼Ó¼ÆÊ±Æ÷
 	GetWorld()->GetTimerManager().SetTimer(MemberTimerHandle, this, &USAttributeComponent::EnergyRecovery, 0.1f, true, 0.0f);
 }
