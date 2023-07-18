@@ -88,6 +88,10 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		EnhancedInputComponent->BindAction(PrimaryAttackAction, ETriggerEvent::Triggered, this, &ASCharacter::PrimaryAttack);
 		// 冲刺
 		EnhancedInputComponent->BindAction(PrimaryDashAction, ETriggerEvent::Triggered, this, &ASCharacter::PrimaryDash);
+		// 蓄力开始
+		EnhancedInputComponent->BindAction(AccumulateDown, ETriggerEvent::Started, this, &ASCharacter::AccumulateStart);
+		// 蓄力结束
+		EnhancedInputComponent->BindAction(AccumulateRelease, ETriggerEvent::Triggered, this, &ASCharacter::AccumulateEnd);
 
 	}
 	
@@ -141,6 +145,19 @@ void ASCharacter::PrimaryAttack()
 void ASCharacter::PrimaryDash()
 {
 	AbilityComp->StartActionByName(this, "BaseDash");
+}
+
+// 蓄力开始
+void ASCharacter::AccumulateStart()
+{
+	UE_LOG(LogTemp, Log, TEXT("Accumulate Start"));
+	AbilityComp->StartActionByName(this, "Accumulate");
+}
+// 蓄力结束
+void ASCharacter::AccumulateEnd()
+{
+	UE_LOG(LogTemp, Log, TEXT("Accumulate End"));
+	AbilityComp->StopActionByName(this, "Accumulate");
 }
 
 // 死亡判断
