@@ -3,52 +3,68 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilitySystemComponent.h"
+#include "Components/ActorComponent.h"
+#include "GameplayTagContainer.h"
 #include "SActionComponent.generated.h"
 
 
-USTRUCT()
-struct FSingleAbilityInfo
-{
-	GENERATED_BODY()
-
-public:
-
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UGameplayAbility> Action;
-
-	UPROPERTY(EditDefaultsOnly)
-	int32 Leve;
-
-	UPROPERTY(EditDefaultsOnly)
-	FName ActionName;
-
-};
+class USAction;
 
 /**
  * 
  */
-UCLASS()
-class INNOCENCE_API USActionComponent : public UAbilitySystemComponent
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
+class INNOCENCE_API USActionComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:
 
+	// 启动的标签
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tags")
+		FGameplayTagContainer ActiveGameplayTags;
+
+	// 添加行动
+	UFUNCTION(BlueprintCallable, Category = "Action")
+		void AddAction(AActor* InstigatorActor, TSubclassOf<USAction> ActionClass);
+
+	// 移除行动
+	UFUNCTION(BlueprintCallable, Category = "Action")
+		void RemoveAction(USAction* ActionToRemove);
+
 	// 启动行动
 	UFUNCTION(BlueprintCallable, Category = "Action")
-	bool StartActionByName(AActor* InstigatorActor, FName ActionName);
+		bool StartActionByName(AActor* InstigatorActor, FName ActionName);
 
-	//// 结束行动
-	//UFUNCTION(BlueprintCallable, Category = "Action")
-	//bool StopActionByName(AActor* InstigatorActor, FName ActionName);
+	// 结束行动
+	UFUNCTION(BlueprintCallable, Category = "Action")
+		bool StopActionByName(AActor* InstigatorActor, FName ActionName);
+
+	// Sets default values for this component's properties
+	USActionComponent();
 
 protected:
 
+	UFUNCTION(Server, Reliable)
+		void ServerStartAction(AActor* InstigatorActor, FName ActionName);
+
+	UFUNCTION(Server, Reliable)
+		void ServerStopAction(AActor* InstigatorActor, FName ActionName);
+
 	UPROPERTY(EditAnywhere, Category = "Action")
-	TArray<FSingleAbilityInfo> DefaultActions;
+		TArray<TSubclassOf<USAction>> DefaultActions;
+
+	UPROPERTY(Replicated)
+		TArray<USAction*> Actions; // 所有行动
 
 	// Called when the game starts
 	virtual void BeginPlay() override;
+
+public:
+
+	bool ReplicateSubobjects(class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags) override;
+
+	// Debug查看Action状态
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	
 };

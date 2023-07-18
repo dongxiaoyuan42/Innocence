@@ -2,28 +2,50 @@
 
 
 #include "Actions/SAction_ProjectileAttack.h"
+#include "Animation/AnimMontage.h"
 #include "GameFramework/Character.h"
 
-void USAction_ProjectileAttack::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
+
+
+USAction_ProjectileAttack::USAction_ProjectileAttack()
 {
-	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+	HandSocketName = "Muzzle_02"; // 左手发射骨骼名称
+}
 
-	UE_LOG(LogTemp, Log, TEXT("Fire"));
+// 开始远程攻击行动
+// 获取到执行角色后，仅服务端执行该角色播放攻击蒙太奇并延时触发攻击
+void USAction_ProjectileAttack::StartAction_Implementation(AActor* InstigatorActor)
+{
+	Super::StartAction_Implementation(InstigatorActor);
 
-	ACharacter* InstigatorCharacter = Cast<ACharacter>(ActorInfo->OwnerActor);
-	if (InstigatorCharacter)
+	ACharacter* Character = Cast<ACharacter>(InstigatorActor);
+	if (Character)
 	{
-		AttackDelay_Elapsed(InstigatorCharacter);
+		if (ensure(AttackAnim))
+		{
+			Character->PlayAnimMontage(AttackAnim);
+
+			if (Character->HasAuthority())
+			{
+				FTimerHandle TimerHandle_AttackDelay;
+				FTimerDelegate Delegate;
+				Delegate.BindUFunction(this, "AttackDelay_Elapsed", Character);
+
+				float AttackDelay = 0.2f;
+
+				GetWorld()->GetTimerManager().SetTimer(TimerHandle_AttackDelay, Delegate, AttackDelay, false);
+			}
+
+		}
 	}
 
-	EndAbility(Handle, ActorInfo, ActivationInfo, false, true);
 }
 
 // 实施攻击
+// 先用胶囊检测确定屏幕中间可接触到的第一个目标的位置，再从左手发射抛射物
 void USAction_ProjectileAttack::AttackDelay_Elapsed(ACharacter* InstigatorCharacter)
 {
-
-	if (ProjectileBaseClass)
+	if (ensureAlways(ProjectileBaseClass))
 	{
 		// 左手位置
 		FVector HandLocation = InstigatorCharacter->GetMesh()->GetSocketLocation(HandSocketName);
@@ -61,4 +83,5 @@ void USAction_ProjectileAttack::AttackDelay_Elapsed(ACharacter* InstigatorCharac
 		GetWorld()->SpawnActor<AActor>(ProjectileBaseClass, SpawnTM, SpawnParames);
 	}
 
+	StopAction(InstigatorCharacter);
 }

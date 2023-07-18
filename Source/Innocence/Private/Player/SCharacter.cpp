@@ -86,6 +86,8 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASCharacter::Look);
 		// ∆’Õ®π•ª˜
 		EnhancedInputComponent->BindAction(PrimaryAttackAction, ETriggerEvent::Triggered, this, &ASCharacter::PrimaryAttack);
+		// ≥Â¥Ã
+		EnhancedInputComponent->BindAction(PrimaryDashAction, ETriggerEvent::Triggered, this, &ASCharacter::PrimaryDash);
 
 	}
 	
@@ -135,6 +137,12 @@ void ASCharacter::PrimaryAttack()
 	AbilityComp->StartActionByName(this, "BaseAttack");
 }
 
+// ≥Â¥Ã
+void ASCharacter::PrimaryDash()
+{
+	AbilityComp->StartActionByName(this, "BaseDash");
+}
+
 // À¿Õˆ≈–∂œ
 void ASCharacter::GetHealthChange(AActor* InstigatordActor, USAttributeComponent* OwningComp, float NewHealth, float Delta)
 {
@@ -146,9 +154,4 @@ void ASCharacter::GetHealthChange(AActor* InstigatordActor, USAttributeComponent
 
 		SetLifeSpan(5.0f);
 	}
-}
-
-UAbilitySystemComponent* ASCharacter::GetAbilitySystemComponent() const
-{
-	return AbilityComp;
 }

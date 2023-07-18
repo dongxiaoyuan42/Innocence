@@ -69,7 +69,7 @@ protected:
 
 public:
 	//ÐîÁ¦×Óµ¯º¯Êý
-	//UFUNCTION()
-	//void EnhancedProjectile(float ChargeTime);
+	UFUNCTION()
+	void EnhancedProjectile(float ChargeTime);
 
 };
