@@ -2,6 +2,7 @@
 
 
 #include "Component/SWeaponComponent.h"
+#include "Components/StaticMeshComponent.h"
 #include "Item/Projectile/SProjectileBase.h"
 
 // Sets default values for this component's properties
@@ -12,7 +13,7 @@ USWeaponComponent::USWeaponComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// 枪械网格体
-	WeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>("BaseMesh");
+	WeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>("WeaponMesh");
 	WeaponMesh->SetSimulatePhysics(true);
 	// 默认7发子弹
 	BulletNumMax = 7;
@@ -20,17 +21,8 @@ USWeaponComponent::USWeaponComponent()
 
 }
 
-// Called when the game starts
-void USWeaponComponent::BeginPlay()
-{
-	Super::BeginPlay();
-
-	// 默认装满
-	AddAll();
-
-}
-
 // 开火
+// 选用现有的子弹类型，并子弹类型复位
 TSubclassOf<AActor> USWeaponComponent::Fire()
 {
 	// 保证有子弹
@@ -39,8 +31,21 @@ TSubclassOf<AActor> USWeaponComponent::Fire()
 		return nullptr;
 	}
 
-	return BulletInGun.Pop();
-	//return BulletInGun[0];
+	BulletInGun[0] = BulletType[NowBulletType];
+	NowBulletType = 0;
+
+	return BulletPop();
+}
+
+TSubclassOf<AActor> USWeaponComponent::BulletPop()
+{
+	TSubclassOf<AActor> PopBulletValue = BulletInGun[0];
+	for (int i = 0; i < BulletInGun.Num() - 1; i++)
+	{
+		BulletInGun[i] = BulletInGun[i + 1];
+	}
+	BulletInGun.Pop();
+	return PopBulletValue;
 }
 
 // 装弹
@@ -51,16 +56,12 @@ void USWeaponComponent::AddBullet(TSubclassOf<AActor> ProjectileClass)
 	{
 		return;
 	}
-
-	if (!ProjectileClass) {
-		BulletInGun.Add(DefaultBullet);
-		return;
-	}
-
+	// ？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？
 	if (ProjectileClass)
 	{
 		BulletInGun.Add(ProjectileClass);
 	}
+	// ？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？
 }
 
 // 装满
@@ -75,15 +76,26 @@ void USWeaponComponent::AddAll()
 
 	if (ensure(DefaultBullet))
 	{
-		//BulletInGun.Add(DefaultBullet);
-		//BulletInGun.Init(DefaultBullet, delta);
+		// ？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？
 		for (int i = 0; i < delta; i++)
 		{
 			BulletInGun.Add(DefaultBullet);
 		}
-
+		// ？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？
 	}
 }
+
+
+// Called when the game starts
+void USWeaponComponent::BeginPlay()
+{
+	Super::BeginPlay();
+
+	DefaultBullet = BulletType[0];
+	AddAll();
+
+}
+
 
 // Called every frame
 void USWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -101,4 +113,21 @@ USWeaponComponent* USWeaponComponent::GetWeaponComp(AActor* FromActor)
 	}
 
 	return nullptr;
+}
+
+bool USWeaponComponent::CanFire()
+{
+	return BulletInGun.Num() > 0;
+}
+
+// 向右旋转
+void USWeaponComponent::BulletTypeRight()
+{
+	NowBulletType = (NowBulletType + 1) % BulletType.Num();
+}
+
+// 向左旋转
+void USWeaponComponent::BulletTypeLeft()
+{
+	NowBulletType = (NowBulletType + BulletType.Num() - 1) % BulletType.Num();
 }
