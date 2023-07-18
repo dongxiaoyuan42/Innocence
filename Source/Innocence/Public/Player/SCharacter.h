@@ -12,7 +12,7 @@
 class USpringArmComponent; // 弹簧臂组件
 class UCameraComponent; // 摄像机组件
 class USAttributeComponent; // 属性组件
-//class USWeaponComponent; // 武器组件
+class USWeaponComponent; // 武器组件
 class USActionComponent; // 行动组件
 
 // 输入相关
@@ -40,8 +40,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
 	USAttributeComponent* AttributeComp; // 属性组件
 
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
-	//USWeaponComponent* WeaponComp; // 武器组件
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
+	USWeaponComponent* WeaponComp; // 武器组件
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
 	USActionComponent* AbilityComp; // ASC
@@ -67,6 +67,22 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* PrimaryDashAction; // 冲刺
 
+	// 蓄力
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* AccumulateDown;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* AccumulateRelease;
+
+	// 换弹
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* PrimaryReloadAction;
+
+	// 子弹种类左右切换
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* BulletTypeRightAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* BulletTypeLeftAction;
+
 	// 移动
 	void Move(const FInputActionValue& Value);
 
@@ -78,6 +94,19 @@ protected:
 
 	// 冲刺
 	void PrimaryDash();
+
+	// 蓄力开始
+	void AccumulateStart();
+	// 蓄力结束
+	void AccumulateEnd();
+
+	// 换弹
+	void PrimaryReload();
+
+	// 子弹向右切换
+	void BulletTypeRight();
+	// 子弹向左切换
+	void BulletTypeLeft();
 
 protected:
 

@@ -31,8 +31,8 @@ ASCharacter::ASCharacter()
 	CameraComp->SetupAttachment(SpringArmComp);
 	// 添加属性组件
 	AttributeComp = CreateDefaultSubobject<USAttributeComponent>("AttributeComp");
-	//// 添加武器组件
-	//WeaponComp = CreateDefaultSubobject<USWeaponComponent>("WeaponComp");
+	// 添加武器组件
+	WeaponComp = CreateDefaultSubobject<USWeaponComponent>("WeaponComp");
 	// 添加ASC
 	AbilityComp = CreateDefaultSubobject<USActionComponent>(TEXT("AbilitySystem"));
 
@@ -88,6 +88,16 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		EnhancedInputComponent->BindAction(PrimaryAttackAction, ETriggerEvent::Triggered, this, &ASCharacter::PrimaryAttack);
 		// 冲刺
 		EnhancedInputComponent->BindAction(PrimaryDashAction, ETriggerEvent::Triggered, this, &ASCharacter::PrimaryDash);
+		// 蓄力开始
+		EnhancedInputComponent->BindAction(AccumulateDown, ETriggerEvent::Started, this, &ASCharacter::AccumulateStart);
+		// 蓄力结束
+		EnhancedInputComponent->BindAction(AccumulateRelease, ETriggerEvent::Triggered, this, &ASCharacter::AccumulateEnd);
+		// 换弹
+		EnhancedInputComponent->BindAction(PrimaryReloadAction, ETriggerEvent::Triggered, this, &ASCharacter::PrimaryReload);
+		// 子弹向右切换
+		EnhancedInputComponent->BindAction(BulletTypeRightAction, ETriggerEvent::Triggered, this, &ASCharacter::BulletTypeRight);
+		// 子弹向左切换
+		EnhancedInputComponent->BindAction(BulletTypeLeftAction, ETriggerEvent::Triggered, this, &ASCharacter::BulletTypeLeft);
 
 	}
 	
@@ -141,6 +151,39 @@ void ASCharacter::PrimaryAttack()
 void ASCharacter::PrimaryDash()
 {
 	AbilityComp->StartActionByName(this, "BaseDash");
+}
+
+// 蓄力开始
+void ASCharacter::AccumulateStart()
+{
+	UE_LOG(LogTemp, Log, TEXT("Accumulate Start"));
+	AbilityComp->StartActionByName(this, "Accumulate");
+}
+// 蓄力结束
+void ASCharacter::AccumulateEnd()
+{
+	UE_LOG(LogTemp, Log, TEXT("Accumulate End"));
+	AbilityComp->StopActionByName(this, "Accumulate");
+}
+
+// 换弹
+void ASCharacter::PrimaryReload()
+{
+	UE_LOG(LogTemp, Log, TEXT("Reload Start"));
+	AbilityComp->StartActionByName(this, "Reload");
+}
+
+// 子弹向右切换
+void ASCharacter::BulletTypeRight()
+{
+	UE_LOG(LogTemp, Log, TEXT("BulletTypeRight"));
+	AbilityComp->StartActionByName(this, "BulletTypeRight");
+}
+// 子弹向左切换
+void ASCharacter::BulletTypeLeft()
+{
+	UE_LOG(LogTemp, Log, TEXT("BulletTypeLeft"));
+	AbilityComp->StartActionByName(this, "BulletTypeLeft");
 }
 
 // 死亡判断
