@@ -12,7 +12,7 @@
 class USpringArmComponent; // 弹簧臂组件
 class UCameraComponent; // 摄像机组件
 class USAttributeComponent; // 属性组件
-//class USWeaponComponent; // 武器组件
+class USWeaponComponent; // 武器组件
 class USActionComponent; // 行动组件
 
 // 输入相关
@@ -40,8 +40,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
 	USAttributeComponent* AttributeComp; // 属性组件
 
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
-	//USWeaponComponent* WeaponComp; // 武器组件
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
+	USWeaponComponent* WeaponComp; // 武器组件
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
 	USActionComponent* AbilityComp; // ASC
