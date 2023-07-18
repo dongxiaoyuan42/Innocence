@@ -13,7 +13,7 @@ class USpringArmComponent; // 弹簧臂组件
 class UCameraComponent; // 摄像机组件
 class USAttributeComponent; // 属性组件
 //class USWeaponComponent; // 武器组件
-class USActionComponent; // 能力组件
+class USActionComponent; // 行动组件
 
 // 输入相关
 class UInputMappingContext;
@@ -21,7 +21,7 @@ class UInputAction;
 class UInputComponent;
 
 UCLASS()
-class INNOCENCE_API ASCharacter : public ACharacter, public IAbilitySystemInterface
+class INNOCENCE_API ASCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
@@ -46,8 +46,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
 	USActionComponent* AbilityComp; // ASC
 
-	// 获取ASC
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const;
 
 protected:
 
@@ -66,6 +64,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* PrimaryAttackAction; // 左键普通攻击
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* PrimaryDashAction; // 冲刺
+
 	// 移动
 	void Move(const FInputActionValue& Value);
 
@@ -74,6 +75,9 @@ protected:
 
 	// 普通攻击
 	void PrimaryAttack();
+
+	// 冲刺
+	void PrimaryDash();
 
 protected:
 
