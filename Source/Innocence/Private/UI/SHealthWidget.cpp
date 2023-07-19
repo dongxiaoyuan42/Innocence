@@ -27,7 +27,7 @@ void USHealthWidget::NativeConstruct()
 			MaxHealth = AttributeComp->GetHealthMax();
 			HealthChangeCommon(AttributeComp->GetHealth());
 			// 绑定玩家属性组件 OnHealthChanged 到 GetHealthChange
-			AttributeComp->OnHealthChanged.AddDynamic(this, &USHealthWidget::GetHealthChange); //
+			AttributeComp->OnHealthChanged.AddDynamic(this, &USHealthWidget::GetHealthChange); 
 		}
 		// 开始时UI初始化
 		HealthChangeCommon(Health); //
